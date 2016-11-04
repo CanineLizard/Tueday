@@ -57,7 +57,7 @@ public class TitleScreen implements Screen {
             y = yAccel;// + (float) Math.sin(time / 2f) / 2f;
             batch.draw(background, -5 - x, -3 - y, 10, 6);
             batch.draw(play, playRect.x, playRect.y, playRect.width, playRect.height);
-            batch.draw(title, -1 + x, 0.75f + y, 2, 1);
+            batch.draw(title, -1 + x / 3f, 0.75f + y / 3f, 2, 1);
             MyGdxGame.drawBlackBars(batch);
         }
         batch.end();
@@ -65,14 +65,14 @@ public class TitleScreen implements Screen {
 
     private float getAccelX() {
         if (Gdx.app.getType() == Application.ApplicationType.Android) {
-            return Gdx.input.getAccelerometerX();
+            return Gdx.input.getAccelerometerY() / 8f;
         }
         return MyGdxGame.getX(camera) / 4f;
     }
 
     private float getAccelY() {
         if (Gdx.app.getType() == Application.ApplicationType.Android) {
-            return Gdx.input.getAccelerometerY();
+            return -Gdx.input.getAccelerometerX() / 8f;
         }
         return MyGdxGame.getY(camera) / 4f;
     }
