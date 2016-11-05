@@ -57,7 +57,7 @@ public class TitleScreen implements Screen {
             y = yAccel;// + (float) Math.sin(time / 2f) / 2f;
             batch.draw(background, -5 - x, -3 - y, 10, 6);
             batch.draw(play, playRect.x, playRect.y, playRect.width, playRect.height);
-            batch.draw(title, -1 + x / 3f, 0.75f + y / 3f, 2, 1);
+            batch.draw(title, -1 - x / 3f, 0.75f - y / 3f, 2, 1);
             MyGdxGame.drawBlackBars(batch);
         }
         batch.end();

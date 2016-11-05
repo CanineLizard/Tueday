@@ -11,6 +11,8 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
+import java.util.Random;
+
 
 public class MyGdxGame extends Game {
 
@@ -19,6 +21,8 @@ public class MyGdxGame extends Game {
     public static OrthographicCamera camera;
     public static OrthographicCamera stillCam;
     private SpriteBatch batch;
+
+    public static final Random random = new Random();
 
     public static Texture texDot;
 
@@ -45,8 +49,13 @@ public class MyGdxGame extends Game {
     }
 
     public static void drawBlackBars(SpriteBatch batch) {
-        batch.draw(texDot, -Gdx.graphics.getWidth() / 2f, HEIGHT / 2f, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        batch.draw(texDot, -Gdx.graphics.getWidth() / 2f, -HEIGHT / 2f - Gdx.graphics.getHeight(), Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        /*batch.draw(texDot, -Gdx.graphics.getWidth() / 2f, HEIGHT / 2f, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        batch.draw(texDot, -Gdx.graphics.getWidth() / 2f, -HEIGHT / 2f - Gdx.graphics.getHeight(), Gdx.graphics.getWidth(), Gdx.graphics.getHeight());*/
+        batch.draw(texDot, WIDTH / 2f, -HEIGHT / 2f, Gdx.graphics.getWidth(), HEIGHT);
+        batch.draw(texDot, -WIDTH / 2f, -HEIGHT / 2f, -Gdx.graphics.getWidth(), HEIGHT);
+        batch.draw(texDot, -WIDTH / 2f, HEIGHT / 2f, WIDTH, Gdx.graphics.getHeight());
+        batch.draw(texDot, -WIDTH / 2f, -HEIGHT / 2f, WIDTH, -Gdx.graphics.getHeight());
+
     }
 
     public static void setCameraLocation(float x, float y) {
