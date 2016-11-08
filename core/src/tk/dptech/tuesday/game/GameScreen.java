@@ -13,6 +13,9 @@ import tk.dptech.tuesday.Maths;
 import tk.dptech.tuesday.MyGdxGame;
 import tk.dptech.tuesday.TitleScreen;
 import tk.dptech.tuesday.game.gameobjects.Coral;
+import tk.dptech.tuesday.game.gameobjects.FishEvil;
+import tk.dptech.tuesday.game.gameobjects.Seaweed;
+import tk.dptech.tuesday.game.gameobjects.Trail;
 
 /**
  * Created by brandon on 11/2/16.
@@ -25,7 +28,6 @@ public class GameScreen implements Screen {
     public static final int LIGHTING_QUALITY = 32;
 
     public static LinkedList<Light> lights = new LinkedList<Light>();
-    public Light light = new Light(0, 0, 5f);
 
     public static final LinkedList<GameObject> gameObjectsBack = new LinkedList<GameObject>();
     public static final LinkedList<GameObject> gameObjectsFore = new LinkedList<GameObject>();
@@ -35,6 +37,11 @@ public class GameScreen implements Screen {
     public static final Texture texOverlay = new Texture("overlay.png");
 
     public float coralTime = 0;
+    public float seaweedTime = 0;
+    public float trailTime = 0;
+    public float evilTime = 0;
+
+    public static final Player player = new Player(0, 0);
 
     public static float X = 0, Y = 0;
 
@@ -43,7 +50,6 @@ public class GameScreen implements Screen {
         gameObjectsBack.clear();
         gameObjectsFore.clear();
         batch = new SpriteBatch();
-        lights.add(light);
         gameObjectsBack.add(new Coral());
     }
 
@@ -55,15 +61,30 @@ public class GameScreen implements Screen {
             delta *= 5;
             X += delta;
             coralTime += delta;
+            seaweedTime += delta;
+            trailTime += delta;
+            evilTime += delta;
 
             Y = MyGdxGame.getY(camera) / (MyGdxGame.HEIGHT * 2);
-
-            light.x = MyGdxGame.getX(camera) + X;
-            light.y = MyGdxGame.getY(camera) + Y;
 
             if (coralTime > 8) {
                 coralTime = 0;
                 gameObjectsBack.add(new Coral());
+            }
+
+            if (seaweedTime > 13) {
+                seaweedTime = 0;
+                gameObjectsBack.add(new Seaweed());
+            }
+
+            if (trailTime > 0.1f) {
+                trailTime = 0;
+                gameObjectsFore.add(new Trail(player.x + player.w / 2f, player.y + player.h / 2f, 1.2f, 1));
+            }
+
+            if (evilTime > 9f) {
+                evilTime = 0;
+                gameObjectsFore.add(new FishEvil());
             }
 
             batch.draw(texBackground, -MyGdxGame.WIDTH / 2 - 1 - (X * 0.7f) % (MyGdxGame.WIDTH + 2), -MyGdxGame.HEIGHT / 2 - 1 - Y * 0.7f, MyGdxGame.WIDTH + 2, MyGdxGame.HEIGHT + 2);
@@ -77,7 +98,7 @@ public class GameScreen implements Screen {
 
             for (int i = 0; i < gameObjectsFore.size(); i++) {
                 GameObject object = gameObjectsFore.get(i);
-                if (!object.render(delta, 1, Y, batch, gameObjectsFore))
+                if (!object.render(delta, 1, Y * 1.1f, batch, gameObjectsFore))
                     i--;
             }
 
@@ -85,13 +106,14 @@ public class GameScreen implements Screen {
                 for (float y = -MyGdxGame.HEIGHT / 2f; y < MyGdxGame.HEIGHT / 2f; y += 1f / LIGHTING_QUALITY) {
                     float brightness = 0.0f;
                     for (Light light : lights) {
-                        brightness = Maths.lerp(brightness, 1, light.get(x + X, y + Y));
+                        brightness = Maths.lerp(brightness, 1, light.get(x, y));
                     }
                     batch.setColor(new Color(1, 1, 1, 1 - Math.min(brightness, 1)));
                     batch.draw(texDot, x, y, 1f / LIGHTING_QUALITY, 1f / LIGHTING_QUALITY);
                 }
             }
             batch.setColor(Color.WHITE);
+            player.render(delta, Y, batch, camera);
             batch.draw(texOverlay, -MyGdxGame.WIDTH / 2f, -MyGdxGame.HEIGHT / 2f, MyGdxGame.WIDTH, MyGdxGame.HEIGHT);
             MyGdxGame.drawBlackBars(batch);
         }
